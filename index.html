@@ -5,18 +5,19 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>WakeUpScream - The Alarm That Actually Works</title>
     <style>
-        /* MODERN SOFT UI DESIGN SYSTEM */
+        /* MODERN SOFT UI DESIGN SYSTEM (Matches your App) */
         :root {
             --bg: #F8F9FA;
             --card: #FFFFFF;
             --text-main: #212529;
-            --text-muted: #6C757D;
+            --text-muted: #868E96;
             --yellow: #FFCA28;
             --yellow-hover: #FFB300;
             --yellow-text: #1A1A1A;
             --lavender: #E8E0FF;
             --purple: #9B72FF;
             --mint: #D8F5E6;
+            --peach: #FFE5D9;
         }
 
         * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -26,6 +27,14 @@
             font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
             color: var(--text-main);
             line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        /* RESPONSIVE CONTAINER */
+        .container {
+            max-width: 1100px;
+            margin: 0 auto;
+            padding: 0 20px;
         }
 
         /* NAVBAR */
@@ -33,31 +42,34 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
-            padding: 20px 40px;
-            background: rgba(248, 249, 250, 0.8);
-            backdrop-filter: blur(10px);
+            padding: 20px 0;
             position: sticky;
             top: 0;
+            background: rgba(248, 249, 250, 0.9);
+            backdrop-filter: blur(10px);
             z-index: 100;
         }
-        .nav-logo { font-size: 20px; font-weight: 800; display: flex; align-items: center; gap: 10px; }
-        .nav-logo span { background: var(--lavender); padding: 5px 10px; border-radius: 10px; }
+        .nav-logo { display: flex; align-items: center; gap: 12px; font-size: 22px; font-weight: 800; }
+        .nav-logo img { width: 40px; height: 40px; border-radius: 12px; object-fit: cover; }
+        .nav-logo .fallback-icon { background: var(--peach); padding: 8px 10px; border-radius: 12px; font-size: 20px; }
+        
         .nav-btn {
             background: var(--yellow); color: var(--yellow-text); text-decoration: none;
-            padding: 10px 20px; border-radius: 12px; font-weight: 700; font-size: 14px;
-            transition: 0.2s;
+            padding: 12px 24px; border-radius: 16px; font-weight: 800; font-size: 15px;
+            transition: all 0.2s; box-shadow: 0 4px 15px rgba(255, 202, 40, 0.3);
         }
-        .nav-btn:hover { background: var(--yellow-hover); }
+        .nav-btn:hover { background: var(--yellow-hover); transform: translateY(-2px); }
 
         /* HERO SECTION */
         .hero {
             text-align: center;
-            padding: 80px 20px 40px 20px;
-            max-width: 800px;
-            margin: 0 auto;
+            padding: 60px 20px 40px 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
         }
         .hero h1 {
-            font-size: 56px;
+            font-size: clamp(36px, 8vw, 64px); /* Fluid Typography */
             font-weight: 800;
             letter-spacing: -1.5px;
             margin-bottom: 20px;
@@ -65,87 +77,102 @@
         }
         .hero h1 span { color: var(--purple); }
         .hero p {
-            font-size: 20px;
+            font-size: clamp(16px, 4vw, 20px);
             color: var(--text-muted);
             margin-bottom: 40px;
+            max-width: 600px;
         }
+        
         .download-btn {
-            display: inline-block;
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
             background: var(--yellow);
             color: var(--yellow-text);
             text-decoration: none;
             padding: 20px 40px;
             border-radius: 24px;
-            font-size: 20px;
+            font-size: clamp(18px, 4vw, 22px);
             font-weight: 800;
             box-shadow: 0 10px 30px rgba(255, 202, 40, 0.4);
-            transition: transform 0.2s, box-shadow 0.2s;
+            transition: all 0.2s;
         }
         .download-btn:hover {
-            transform: translateY(-3px);
+            transform: translateY(-4px);
             box-shadow: 0 15px 40px rgba(255, 202, 40, 0.6);
+            background: var(--yellow-hover);
         }
         .version-tag {
-            display: inline-block;
+            display: block;
             margin-top: 15px;
             font-size: 14px;
             color: var(--text-muted);
             font-weight: 600;
         }
 
-        /* SCREENSHOTS */
+        /* SCREENSHOTS CAROUSEL */
+        .screenshots-wrapper {
+            width: 100%;
+            overflow-x: auto;
+            padding: 30px 0;
+            scroll-snap-type: x mandatory;
+            -webkit-overflow-scrolling: touch;
+            scrollbar-width: none; /* Hide scrollbar Firefox */
+        }
+        .screenshots-wrapper::-webkit-scrollbar { display: none; } /* Hide scrollbar Chrome */
+        
         .screenshots {
             display: flex;
-            justify-content: center;
             gap: 20px;
-            padding: 40px 20px;
-            overflow-x: auto;
-            max-width: 1000px;
+            padding: 0 20px;
+            width: max-content;
             margin: 0 auto;
         }
         .screenshots img {
-            height: 400px;
-            border-radius: 24px;
-            box-shadow: 0 15px 40px rgba(0,0,0,0.08);
+            height: 500px; /* Big screenshots */
+            width: auto;
+            border-radius: 32px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.08);
             transition: transform 0.3s;
+            scroll-snap-align: center;
         }
-        .screenshots img:hover { transform: translateY(-10px); }
+        @media (max-width: 768px) {
+            .screenshots img { height: 400px; border-radius: 24px; }
+        }
 
         /* FEATURES GRID */
         .section-title {
             text-align: center;
-            font-size: 36px;
+            font-size: clamp(28px, 6vw, 42px);
             font-weight: 800;
             margin: 60px 0 40px 0;
             letter-spacing: -1px;
         }
         .features {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
             gap: 24px;
-            max-width: 1000px;
-            margin: 0 auto;
-            padding: 0 20px;
         }
         .feature-card {
             background: var(--card);
-            padding: 30px;
-            border-radius: 24px;
+            padding: 32px;
+            border-radius: 32px;
             box-shadow: 0 10px 30px rgba(0,0,0,0.04);
+            transition: transform 0.2s;
         }
+        .feature-card:hover { transform: translateY(-5px); }
         .feature-icon {
-            width: 50px; height: 50px; border-radius: 16px;
+            width: 60px; height: 60px; border-radius: 20px;
             display: flex; justify-content: center; align-items: center;
-            font-size: 24px; margin-bottom: 20px;
+            font-size: 28px; margin-bottom: 20px;
         }
-        .feature-card h3 { font-size: 18px; margin-bottom: 10px; font-weight: 700; }
-        .feature-card p { font-size: 14px; color: var(--text-muted); }
+        .feature-card h3 { font-size: 20px; margin-bottom: 12px; font-weight: 800; }
+        .feature-card p { font-size: 15px; color: var(--text-muted); }
 
         /* INSTALL GUIDE */
         .install-guide {
-            max-width: 800px;
-            margin: 60px auto;
-            padding: 0 20px;
+            max-width: 700px;
+            margin: 0 auto;
         }
         .step {
             display: flex;
@@ -153,129 +180,144 @@
             margin-bottom: 20px;
             background: var(--card);
             padding: 24px;
-            border-radius: 20px;
+            border-radius: 24px;
             box-shadow: 0 5px 20px rgba(0,0,0,0.03);
+            align-items: flex-start;
         }
         .step-number {
             background: var(--lavender);
             color: var(--purple);
-            width: 40px; height: 40px;
+            width: 44px; height: 44px;
             border-radius: 50%;
             display: flex; justify-content: center; align-items: center;
             font-weight: 800; font-size: 18px; flex-shrink: 0;
         }
-        .step-content h3 { font-size: 16px; margin-bottom: 5px; font-weight: 700; }
-        .step-content p { font-size: 14px; color: var(--text-muted); }
+        .step-content h3 { font-size: 18px; margin-bottom: 8px; font-weight: 800; }
+        .step-content p { font-size: 15px; color: var(--text-muted); }
+        .step-content code {
+            background: var(--bg); padding: 2px 6px; border-radius: 6px;
+            font-family: monospace; font-size: 14px;
+        }
 
         /* FOOTER */
         footer {
             text-align: center;
-            padding: 40px;
+            padding: 60px 20px;
             color: var(--text-muted);
             font-size: 14px;
-            margin-top: 40px;
+            border-top: 1px solid rgba(0,0,0,0.05);
+            margin-top: 60px;
         }
     </style>
 </head>
 <body>
 
-    <!-- NAVBAR -->
-    <nav>
-        <div class="nav-logo"><span>🔊</span> WakeUpScream</div>
-        <a href="#download" class="nav-btn">Download</a>
-    </nav>
+    <div class="container">
+        <!-- NAVBAR -->
+        <nav>
+            <div class="nav-logo">
+                <!-- TO USE YOUR LOGO: Upload 'logo.png' to your repo root. The code will automatically use it. -->
+                <img src="logo.png" alt="Logo" onerror="this.style.display='none'; document.getElementById('fallback-logo').style.display='block';">
+                <span id="fallback-logo" class="fallback-icon" style="display:none;">🔊</span>
+                WakeUpScream
+            </div>
+            <a href="#download" class="nav-btn">Download</a>
+        </nav>
 
-    <!-- HERO -->
-    <header class="hero">
-        <h1>The alarm that actually <span>wakes you up.</span></h1>
-        <p>Because gentle alarms don't work. Powered by math equations, physical shaking, and pure intensity.</p>
-        
-        <div id="download">
-            <!-- REPLACE THE LINK BELOW WITH YOUR APK DOWNLOAD LINK -->
-            <a href="https://github.com/YourUsername/WakeUpScream-Updates/releases/download/v1.0.0/app-release.apk" class="download-btn">
-                ⬇ Download for Android
-            </a>
-        </div>
-        <span class="version-tag">Latest Version 1.0.0 • Free</span>
-    </header>
+        <!-- HERO -->
+        <header class="hero">
+            <h1>The alarm that actually <span>wakes you up.</span></h1>
+            <p>Because gentle alarms don't work. Powered by math equations, physical shaking, and pure intensity.</p>
+            
+            <div id="download">
+                <!-- REPLACE THE LINK BELOW WITH YOUR APK DOWNLOAD LINK -->
+                <a href="https://github.com/YourUsername/WakeUpScream-Updates/releases/download/v1.0.0/app-release.apk" class="download-btn">
+                    ⬇ Download APK
+                </a>
+            </div>
+            <span class="version-tag">Latest Version 1.0.0 • Free • 15MB</span>
+        </header>
 
-    <!-- SCREENSHOTS -->
-    <!-- REPLACE SRC LINKS WITH YOUR ACTUAL SCREENSHOT FILES -->
-    <div class="screenshots">
-        <img src="screenshots/dashboard.png" alt="Dashboard">
-        <img src="screenshots/edit.png" alt="Edit Alarm">
-        <img src="screenshots/challenge.png" alt="Challenge">
-    </div>
-
-    <!-- WHY IT'S DIFFERENT -->
-    <h2 class="section-title">Why WakeUpScream is Different</h2>
-    <div class="features">
-        <div class="feature-card">
-            <div class="feature-icon" style="background: var(--lavender);">🧠</div>
-            <h3>Multiple Challenges</h3>
-            <p>Math equations, physical shaking, QR scanning, or typing. You can't snooze without solving them.</p>
-        </div>
-        <div class="feature-card">
-            <div class="feature-icon" style="background: var(--yellow);">🎙️</div>
-            <h3>Custom Voice Scripts</h3>
-            <p>Record your own voice or use Text-to-Speech to scream your name and wake you up.</p>
-        </div>
-        <div class="feature-card">
-            <div class="feature-icon" style="background: var(--mint);">📊</div>
-            <h3>Wake-Up Stats</h3>
-            <p>Track your average solve time, fastest time, and daily streaks. Gamify your mornings.</p>
-        </div>
-        <div class="feature-card">
-            <div class="feature-icon" style="background: #FFE5D9;">⚡</div>
-            <h3>High Priority Alarm</h3>
-            <p>Uses Android's native Alarm Manager to bypass Doze Mode and ring even if your phone is locked.</p>
-        </div>
-    </div>
-
-    <!-- INSTALLATION GUIDE -->
-    <h2 class="section-title">How to Install</h2>
-    <div class="install-guide">
-        <p style="color: var(--text-muted); text-align: center; margin-bottom: 30px; font-size: 15px;">
-            Since WakeUpScream is distributed directly (not through the Play Store), you will need to bypass the standard Play Protect warning.
-        </p>
-
-        <div class="step">
-            <div class="step-number">1</div>
-            <div class="step-content">
-                <h3>Download the APK</h3>
-                <p>Click the download button above to download the <code>app-release.apk</code> file.</p>
+        <!-- SCREENSHOTS (Swipe on mobile) -->
+        <div class="screenshots-wrapper">
+            <div class="screenshots">
+                <!-- REPLACE SRC LINKS WITH YOUR ACTUAL SCREENSHOT FILES -->
+                <img src="screenshots/dashboard.png" alt="Dashboard">
+                <img src="screenshots/edit.png" alt="Edit Alarm">
+                <img src="screenshots/challenge.png" alt="Challenge">
             </div>
         </div>
 
-        <div class="step">
-            <div class="step-number">2</div>
-            <div class="step-content">
-                <h3>Open the File</h3>
-                <p>Open the downloaded file from your notification bar or file manager. You may see a warning saying <i>"For your security, your phone is not allowed to install unknown apps from this source."</i></p>
+        <!-- WHY IT'S DIFFERENT -->
+        <h2 class="section-title">Why WakeUpScream is Different</h2>
+        <div class="features">
+            <div class="feature-card">
+                <div class="feature-icon" style="background: var(--lavender);">🧠</div>
+                <h3>Multiple Challenges</h3>
+                <p>Math equations, physical shaking, QR scanning, or typing. You can't snooze without solving them.</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon" style="background: var(--yellow);">🎙️</div>
+                <h3>Custom Voice Scripts</h3>
+                <p>Record your own voice or use Text-to-Speech to scream your name and wake you up.</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon" style="background: var(--mint);">📊</div>
+                <h3>Wake-Up Stats</h3>
+                <p>Track your average solve time, fastest time, and daily streaks. Gamify your mornings.</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon" style="background: var(--peach);">⚡</div>
+                <h3>High Priority Alarm</h3>
+                <p>Uses Android's native Alarm Manager to bypass Doze Mode and ring even if your phone is locked.</p>
             </div>
         </div>
 
-        <div class="step">
-            <div class="step-number">3</div>
-            <div class="step-content">
-                <h3>Allow Unknown Sources</h3>
-                <p>Tap <b>Settings</b> on the popup, and enable <b>"Allow from this source"</b>. Then click <b>Back</b> and tap <b>Install</b>.</p>
-            </div>
-        </div>
+        <!-- INSTALLATION GUIDE -->
+        <h2 class="section-title">How to Install</h2>
+        <div class="install-guide">
+            <p style="color: var(--text-muted); text-align: center; margin-bottom: 30px; font-size: 15px;">
+                Since WakeUpScream is distributed directly (not through the Play Store), you will need to bypass the standard Play Protect warning.
+            </p>
 
-        <div class="step">
-            <div class="step-number">4</div>
-            <div class="step-content">
-                <h3>Bypass Play Protect (If shown)</h3>
-                <p>If Google Play Protect says <i>"Unsafe app blocked"</i> or <i>"App scan recommended"</i>, tap <b>"More details"</b> and then tap <b>"Install Anyway"</b>. (This happens because the app is new and not yet reviewed by Google).</p>
+            <div class="step">
+                <div class="step-number">1</div>
+                <div class="step-content">
+                    <h3>Download the APK</h3>
+                    <p>Click the download button above to download the <code>app-release.apk</code> file.</p>
+                </div>
             </div>
-        </div>
 
-        <div class="step">
-            <div class="step-number">5</div>
-            <div class="step-content">
-                <h3>Grant Permissions</h3>
-                <p>Open the app, enter your name, and grant the Notification Permission. For the best experience, go to Settings inside the app and enable <b>"Ignore Battery Optimization"</b>.</p>
+            <div class="step">
+                <div class="step-number">2</div>
+                <div class="step-content">
+                    <h3>Open the File</h3>
+                    <p>Open the downloaded file from your notification bar or file manager. You may see a warning saying <i>"For your security, your phone is not allowed to install unknown apps from this source."</i></p>
+                </div>
+            </div>
+
+            <div class="step">
+                <div class="step-number">3</div>
+                <div class="step-content">
+                    <h3>Allow Unknown Sources</h3>
+                    <p>Tap <b>Settings</b> on the popup, and enable <b>"Allow from this source"</b>. Then click <b>Back</b> and tap <b>Install</b>.</p>
+                </div>
+            </div>
+
+            <div class="step">
+                <div class="step-number">4</div>
+                <div class="step-content">
+                    <h3>Bypass Play Protect (If shown)</h3>
+                    <p>If Google Play Protect says <i>"Unsafe app blocked"</i> or <i>"App scan recommended"</i>, tap <b>"More details"</b> and then tap <b>"Install Anyway"</b>. (This happens because the app is new and not yet reviewed by Google).</p>
+                </div>
+            </div>
+
+            <div class="step">
+                <div class="step-number">5</div>
+                <div class="step-content">
+                    <h3>Grant Permissions</h3>
+                    <p>Open the app, enter your name, and grant the Notification Permission. For the best experience, go to Settings inside the app and enable <b>"Ignore Battery Optimization"</b>.</p>
+                </div>
             </div>
         </div>
     </div>
